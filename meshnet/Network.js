@@ -165,7 +165,7 @@ class Network {
                     protocol.onSession(user, link, graph);
                 }
             }
-            const pending = true; // @Note: simultaneous exchange instead of new links one by one; but actually hard to say which way is more realistic?
+            const pending = true; // @Warn: simultaneous exchange instead of new links one by one
             for (const user of shuffle(this.users.slice())) {
                 protocol.onLink(t, user, shuffle([...user.links]), pending);
             }

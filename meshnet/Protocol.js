@@ -59,7 +59,7 @@ class Protocol {
     }
 
     onSend(t, user, target, id) {
-        const message = {id, type: 'plain', source: user, target, timestamp: t};
+        const message = {id, type: 'plain', source: user, target, timestamp: t-1};
         const entry = {message, from: [], hops: [], rep: 0};
         this.store(user, id, entry);
         this.userEncFilter.get(user).add(id);
@@ -121,7 +121,12 @@ class Protocol {
         this.store(link, id, entryHop);
     }
 
-    onSession(user, link, graph) {}
+    onSession(user, link, graph) {
+        if (this.isContactsOnly && !graph.get(link.id).includes(user.id)) {
+            return;
+        }
+        this.userSessions.get(link).add(user);
+    }
 
     beforeLink(t) {
         // process pending messages
@@ -185,31 +190,4 @@ class Protocol {
     }
 }
 
-class GlobalProtocol extends Protocol {
-    onSession(user, link, graph) {
-        const sessions = this.userSessions.get(link);
-        const contacts = graph.get(link.id);
-        for (const session of this.userSessions.get(user)) {
-            if (this.isContactsOnly && !contacts.includes(session.id)) {
-                continue;
-            }
-            sessions.add(session);
-        }
-        if (this.isContactsOnly && !contacts.includes(user.id)) {
-            return;
-        }
-        sessions.add(user);
-    }
-}
-
-class SessionProtocol extends Protocol {
-    onSession(user, link, graph) {
-        if (this.isContactsOnly && !graph.get(link.id).includes(user.id)) {
-            return;
-        }
-        this.userSessions.get(link).add(user);
-    }
-}
-
 export default Protocol;
-export {GlobalProtocol, SessionProtocol};

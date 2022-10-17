@@ -136,15 +136,6 @@ Re-encryption repetition degree:
 over batch
 </p>
 
-<p style="display: none;">
-Update policy:
-<br />
-<select name="update">
-    <option value="global">global</option>
-    <option value="session" selected>session-based</option>
-</select>
-<br />
-</p>
 <p>
 Session restriction in social network:
 <br />
@@ -196,7 +187,7 @@ Session restriction in social network:
 
 <script type="module">
 import Network from './Network.js';
-import {GlobalProtocol, SessionProtocol} from './Protocol.js';
+import Protocol from './Protocol.js';
 
 const sum = list => list.reduce((s, x) => s + x, 0);
 const mean = list => sum(list) / list.length;
@@ -223,7 +214,7 @@ document.getElementById('button-run').addEventListener('click', async () => {
     console.info('opt', options);
 
     const net = new Network([options.row, options.col], options.number);
-    const prot = new ({global: GlobalProtocol, session: SessionProtocol}[options.update])(options.nHop, options.nRep, options.batch, options.reHop, options.reRep, options.updateContactsOnly);
+    const prot = new Protocol(options.nHop, options.nRep, options.batch, options.reHop, options.reRep, options.updateContactsOnly);
 
     const graph = net.getSocialGraph(options.graph, options.pDeg, options.beta);
     document.getElementById('social').innerHTML = `

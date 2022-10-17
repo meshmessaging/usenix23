@@ -1,7 +1,7 @@
 #!env -S deno run
 
 import Network from './Network.js';
-import {SessionProtocol} from './Protocol.js';
+import Protocol from './Protocol.js';
 
 const sum = list => list.reduce((s, x) => s + x, 0);
 const mean = list => sum(list) / list.length;
@@ -24,7 +24,7 @@ const run = async options => {
     });
 
     const net = new Network([options.size, options.size], options.number);
-    const prot = new SessionProtocol(options.nHop, options.nRep, options.batch, options.reHop, options.reRep, options.updateContactsOnly);
+    const prot = new Protocol(options.nHop, options.nRep, options.batch, options.reHop, options.reRep, options.updateContactsOnly);
 
     const graph = net.getSocialGraph(options.graph, options.pDeg, options.beta);
 
